@@ -1,4 +1,4 @@
-use std::io::Read;
+use std::io::{Read, Write};
 use std::net::TcpListener;
 
 fn main() -> std::io::Result<()> {
@@ -16,6 +16,9 @@ fn main() -> std::io::Result<()> {
             "Client data:\n{}",
             String::from_utf8_lossy(&client_data[..])
         );
+
+        stream.write(b"HTTP/1.1 200 OK\r\n\r\n")?;
+        stream.flush()?;
     }
 
     Ok(())
