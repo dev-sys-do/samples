@@ -1,3 +1,4 @@
+use std::io::Read;
 use std::net::TcpListener;
 
 fn main() -> std::io::Result<()> {
@@ -5,9 +6,16 @@ fn main() -> std::io::Result<()> {
 
     println!("Waiting for TCP clients...");
     for stream in server.incoming() {
-        let stream = stream?;
+        let mut stream = stream?;
+        let mut client_data = [0; 1024];
 
         println!("New TCP client {:?}", stream.peer_addr()?);
+
+        stream.read(&mut client_data)?;
+        println!(
+            "Client data:\n{}",
+            String::from_utf8_lossy(&client_data[..])
+        );
     }
 
     Ok(())
